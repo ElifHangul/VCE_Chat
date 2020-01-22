@@ -1,0 +1,41 @@
+
+var chat_container = document.querySelector("#chat");
+
+
+var input = document.querySelector("#chatinput");
+
+input.addEventListener("keydown", onKeyDown );
+
+
+var button = document.querySelector("#sendbutton");
+button.addEventListener("click", onButtonSend );
+
+
+function onKeyDown(event)
+{
+if(event.key != "Enter")
+return;
+onButtonSend();
+}
+
+function onButtonSend()
+{
+var elem = document.createElement("div");
+elem.innerHTML = input.value;
+
+var message = input.value;
+
+input.value = "";
+chat_container.appendChild(elem);
+var server = new SillyClient();
+server.connect("wss://tamats.com:55000","room1");
+server.on_connect = function(){
+	server.sendMessage("AAA");
+
+server.on_message  = function(user_id,message){
+console.log("User "+ user_id + " said " + message);
+
+}
+};
+
+}
