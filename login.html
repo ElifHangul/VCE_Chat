@@ -10,7 +10,9 @@
       <canvas id="canvas" width=800 height=800></canvas>
 	  <script>
 	  var server = new SilliyClient();
-	  var ctx = getContect("2d");
+	  var ctx = canvas2.getContect("2d");
+	  ctx.fillStyle="red";
+	  ctx.fillRect(100,100,100,100);
 	  server.on_message{
 	  if(data.type == "mousemove")
 		ctx.fillStyle = "black";

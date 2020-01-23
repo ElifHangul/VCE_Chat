@@ -33,6 +33,7 @@ var button = document.querySelector("#sendbutton");
 button.addEventListener("click", onButtonSend );
 
 var messageArray=[];
+var userArray = [];
 
 function onKeyDown(event)
 {
@@ -44,8 +45,8 @@ onButtonSend();
 server.on_message  = function(user_id,msg_str){
 	console.log(msg_str);
 	var message = JSON.parse( msg_str );
-	if(message.type === "msg"){
-		messageArray=messageArray.push(message);
+	if(message.type == "msg"){
+		messageArray.push(message);
 		var elem2 = document.createElement("div");
 		elem2.className="comingText";
 		var userId = document.createElement("label");
@@ -57,22 +58,33 @@ server.on_message  = function(user_id,msg_str){
 		elem2.appendChild(userMessage);
 		chat_container.appendChild(elem2);
 	}
-	else if(message.type === "req"){
-		console.log(messageArray);
-		server.sendMessage(messageArray,message.userid);
+	else if(message.type == "req"){
+		userArray.push(message.userid);
+		for (i=0;i<messageArray.length;i++)
+		    server.sendMessage(messageArray[i],message.userid);
 	}
+	
 };
-
+server.on_room_info = function(info){
+		console.log(info);
+		console.log(info.clients[0]);
+		console.log(info.clients[info.clients.length-1]);
+		var message_req={
+			type:"req",
+			userid:info.clients[info.clients.length-1]
+		}
+		var msg_str = JSON.stringify( message_req );
+		server.sendMessage(msg_str,info.clients[0]);
+	};
 //this methods is called when a new user is connected
 server.on_user_connected = function( user_id ){
-	console.log("new");
-	var message_req = {
-		type:"req",
-		userid : user_id
-	};
-	var msg_req = JSON.stringify(message_req);
-	server.sendMessage(msg_req);
+	console.log(user_id);
+	if(!userArray.includes(user_id)){
+		server.on_room_info;
+	}
+	
 }
+
 function onButtonSend()
 {
 	var elem = document.createElement("div");
@@ -89,6 +101,7 @@ function onButtonSend()
 	input.value = "";
 	chat_container.appendChild(elem);
 
+	messageArray.push(message);
 	var msg_str = JSON.stringify( message );
 	server.sendMessage(msg_str);
 
