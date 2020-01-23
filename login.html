@@ -7,18 +7,23 @@
         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
     </head>
     <body>
-        <div class="container">
-            <h1>LOGIN PAGE</h1>
-            
-		</div>
-		<div id="login" class="content">
-				<input id="user" type="text" placeholder="username"/>
-				<input id="room" type="text" placeholder="roomname"/>
-            </div>
-<div class="footer">
-<button id="sendbutton">Send</button>
-</div>
-        </div>
+      <canvas id="canvas" width=800 height=800></canvas>
+	  <script>
+	  var server = new SilliyClient();
+	  var ctx = getContect("2d");
+	  server.on_message{
+	  if(data.type == "mousemove")
+		ctx.fillStyle = "black";
+		ctx.ctx.fillRect(data.x,data.y,10,10)
+	  }
+	  canvas.addListener(mousemove,fucntion(e)){
+	  var data={
+	  type:mousemove
+	  x:e.clientX
+	  y:e.clientY
+	  }
+	  }
+	  </script>
 		
 <script type="text/javascript" src="jquery.min.js"></script>
 <script type="text/javascript" src="sillyclient.js"></script>
